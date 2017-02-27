@@ -11,6 +11,7 @@ using System.Xml;
 using System.IO;
 using System.Xml.Linq;
 using System.Windows;
+
 namespace StandardRoom
 {
     class Customer
@@ -30,6 +31,7 @@ namespace StandardRoom
 
         public String Status { get; set; }
         public Double Paid { get; set; }
+
         public Customer()
         {
             Name = "";
@@ -47,10 +49,9 @@ namespace StandardRoom
 
             Status = "";
         }
-        
+
         public String Customer_daysreserve(String name, int id)
         {
-
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -94,15 +95,14 @@ namespace StandardRoom
                         return daysleft;
                     }
                 }
-
             }
             reader.Close();
 
             return "0";
         }
+
         public String Customer_Roomtype(String name, int id)
         {
-
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -139,24 +139,21 @@ namespace StandardRoom
                     {
                         namecheck = false;
                         reader.Read();
-                       
+
                         daysleft = reader.Value.ToString();
                         reader.Close();
 
                         return daysleft;
                     }
                 }
-
             }
             reader.Close();
 
             return "0";
-            
-
         }
-        public String Customer_LastPayment(String name,int id)
-        {
 
+        public String Customer_LastPayment(String name, int id)
+        {
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -174,12 +171,11 @@ namespace StandardRoom
                         namecheck = false;
                         idcheck = false;
                         reader.Read();
-                      //      Console.Write("Name " + reader.Value);
+                        //      Console.Write("Name " + reader.Value);
                         if (reader.Value.Equals(name))
                         {
                             namecheck = true;
                         }
-
                     }
                     if (reader.Name.Equals("IDCardNo"))
                     {
@@ -188,28 +184,26 @@ namespace StandardRoom
                         //   Console.Write("Name " + reader.Value);
                         if (reader.Value.Equals(id.ToString()))
                         {
-                           idcheck = true;
+                            idcheck = true;
                         }
                     }
 
-                    if (reader.Name.Equals("TimeRemaining") && idcheck==true && namecheck==true)
+                    if (reader.Name.Equals("TimeRemaining") && idcheck == true && namecheck == true)
                     {
                         namecheck = false;
                         reader.Read();
-                         //Console.Write("time " + reader.Value);
+                        //Console.Write("time " + reader.Value);
                         daysleft = reader.Value.ToString();
                         reader.Close();
 
                         return daysleft;
                     }
                 }
-
             }
-           // Console.WriteLine("yo");
+            // Console.WriteLine("yo");
             reader.Close();
 
             return "0";
-
         }
 
         public Boolean UpdateCustomer(String name, int id)
@@ -243,7 +237,6 @@ namespace StandardRoom
                         {
                             idcheck = true;
                         }
-
                     }
                     if (reader.Name.Equals("BalanceRs"))
                     {
@@ -265,7 +258,6 @@ namespace StandardRoom
                                 reader.Close();
 
                                 return true;
-
                             }
                             else
                             {
@@ -276,19 +268,16 @@ namespace StandardRoom
                         }
                     }
                 }
-
-
             }
             reader.Close();
 
             return false;
         }
 
-        public Boolean ReleaseCustomer_Payment(String name,int id,string pay)
+        public Boolean ReleaseCustomer_Payment(String name, int id, string pay)
         {
-
 //            XmlTextReader reader = new XmlTextReader("Customer.xml");
-           // XmlNodeType typenode;
+            // XmlNodeType typenode;
 
             String totaldays = Customer_daysreserve(Name, ID);
 
@@ -314,7 +303,6 @@ namespace StandardRoom
                 }
                 else if (typeroom.Equals("Moderate"))
                 {
-
                     bal = finedays * 500;
                 }
                 else if (typeroom.Equals("Superior"))
@@ -340,16 +328,16 @@ namespace StandardRoom
                 // int remaing = int.Parse(reader.Value);
                 if (mon >= payment)
                 {
-
                     Console.WriteLine("heres your change sir " + (mon - payment));
                     // reader.Close();
 
-                    double moneey = CustomerTotalPaid(name,id);
+                    double moneey = CustomerTotalPaid(name, id);
                     moneey = moneey + payment;
                     //Console.WriteLine("Check it");
                     Console.WriteLine(moneey);
                     var doc = XDocument.Load("Customer.xml");
-                    var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
+                    var node =
+                        doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
                     node.SetElementValue("BalanceRs", "0");
                     node.SetElementValue("Paid", moneey);
                     node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
@@ -357,7 +345,7 @@ namespace StandardRoom
 
                     doc.Save("Customer.xml");
 
-                   // reader.Close();
+                    // reader.Close();
                     //doc.Close();
 
                     return true;
@@ -374,25 +362,25 @@ namespace StandardRoom
                         moneey = moneey + payment;
 
                         var doc = XDocument.Load("Customer.xml");
-                        var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
+                        var node =
+                            doc.Descendants("Customer")
+                                .FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
                         node.SetElementValue("BalanceRs", "0");
                         node.SetElementValue("Paid", moneey);
                         node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
                         node.SetElementValue("Status", "notreserve");
 
                         doc.Save("Customer.xml");
-                       // reader.Close();
+                        // reader.Close();
 
                         return true;
                     }
                 }
-
             }
 
 
             else
             {
-            
                 Console.WriteLine("Your Remaining Payment is " + pay);
                 Console.WriteLine(" You have to Pay the Remaining Balance of Room To Hire Next Room");
                 int mon;
@@ -404,17 +392,18 @@ namespace StandardRoom
                     moneey = moneey + remaing;
 
                     Console.WriteLine("heres your change sir " + (mon - remaing));
-                  //  reader.Close();
+                    //  reader.Close();
 
                     var doc = XDocument.Load("Customer.xml");
-                    var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
+                    var node =
+                        doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
                     node.SetElementValue("BalanceRs", "0");
                     node.SetElementValue("Paid", moneey);
                     node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
                     node.SetElementValue("Status", "notreserve");
-                  //  reader.Close();
+                    //  reader.Close();
                     doc.Save("Customer.xml");
-                    
+
 
                     return true;
                 }
@@ -425,17 +414,19 @@ namespace StandardRoom
                     if (mon >= remaing)
                     {
                         Console.WriteLine("heres your change sir " + (mon - remaing));
-                    //    reader.Close();
+                        //    reader.Close();
 
                         var doc = XDocument.Load("Customer.xml");
-                        var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
+                        var node =
+                            doc.Descendants("Customer")
+                                .FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
                         node.SetElementValue("BalanceRs", "0");
                         node.SetElementValue("Paid", mon - remaing);
                         node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
                         node.SetElementValue("Status", "notreserve");
 
                         doc.Save("Customer.xml");
-                      //  reader.Close();
+                        //  reader.Close();
 
                         return true;
                     }
@@ -444,25 +435,24 @@ namespace StandardRoom
             return false;
         }
 
-        public Boolean DeleteCustomerRoom(string type,string name,int id)
+        public Boolean DeleteCustomerRoom(string type, string name, int id)
         {
-            
             var doc = XDocument.Load(type);
             var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == id.ToString());
             //  node.SetElementValue("BalanceRs", "0");
             // node.SetElementValue("Paid", mon - remaing);
             // node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
             // node.SetElementValue("CheckOutTime", DateTime.Now.ToString());
-            if (node!=null)
-            node.SetElementValue("Status", "notreserve");
+            if (node != null)
+                node.SetElementValue("Status", "notreserve");
 
             doc.Save(type);
 
             return true;
         }
-        public double CustomerTotalPaid(String name,int id)
-        {
 
+        public double CustomerTotalPaid(String name, int id)
+        {
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -473,7 +463,7 @@ namespace StandardRoom
                 typenode = reader.NodeType;
                 if (typenode == XmlNodeType.Element)
                 {
-                //    Console.WriteLine(reader.Value);
+                    //    Console.WriteLine(reader.Value);
                     if (reader.Name.Equals("Name"))
                     {
                         namecheck = false;
@@ -483,7 +473,7 @@ namespace StandardRoom
                         string firstname = reader.Value.ToLower();
                         if (firstname.Equals(name.ToString().ToLower()))
                         {
-                  //                                      Console.Write("Name " + reader.Value);
+                            //                                      Console.Write("Name " + reader.Value);
 
                             namecheck = true;
                         }
@@ -494,30 +484,25 @@ namespace StandardRoom
                         reader.Read();
                         if (reader.Value.Equals(id.ToString()))
                         {
-                      //                               Console.Write(" Id " + reader.Value);
-                    //        Console.WriteLine(namecheck);
+                            //                               Console.Write(" Id " + reader.Value);
+                            //        Console.WriteLine(namecheck);
                             idcheck = true;
                         }
-
                     }
 
-            
+
                     if (reader.Name.Equals("Paid"))
                     {
                         reader.Read();
-                      //  Console.WriteLine("Yess");
+                        //  Console.WriteLine("Yess");
                         if (namecheck == true && idcheck == true)
                         {
-                            
                             Console.WriteLine(" Customer Paid Money " + reader.Value.ToString());
                             double moneey = int.Parse(reader.Value.ToString());
                             reader.Close();
                             return moneey;
                         }
                     }
-
-            
-
                 }
             }
 
@@ -525,8 +510,8 @@ namespace StandardRoom
             return 0.0;
         }
 
-        
-        public String DeleteReservedRoom(String name,int id)
+
+        public String DeleteReservedRoom(String name, int id)
         {
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
@@ -561,11 +546,10 @@ namespace StandardRoom
 
                             idcheck = true;
                         }
-
                     }
                     if (reader.Name.Equals("RoomType"))
                     {
-                        if (idcheck==true && namecheck==true)
+                        if (idcheck == true && namecheck == true)
                         {
                             reader.Read();
                             String r = reader.Value.ToString() + ".xml";
@@ -574,19 +558,19 @@ namespace StandardRoom
                             return r;
                         }
                     }
-
                 }
             }
             reader.Close();
             return "";
-                }
+        }
+
         public String AddCustomerInfo(int floor, int room, String type)
         {
             Console.WriteLine(" If You Already Have Account ** Press 1 ");
             Console.WriteLine(" If You Don't have Your Account ** Press 2 ");
             int num;
             num = Int32.Parse(Console.ReadLine());
-            
+
             if (num == 1)
             {
                 Console.WriteLine("Enter Your Name : ");
@@ -595,8 +579,8 @@ namespace StandardRoom
                 ID = int.Parse(Console.ReadLine());
 
 
-                String r = DeleteReservedRoom(Name,ID);
-                DeleteCustomerRoom(r,Name,ID);
+                String r = DeleteReservedRoom(Name, ID);
+                DeleteCustomerRoom(r, Name, ID);
 
                 XmlTextReader reader = new XmlTextReader("Customer.xml");
                 XmlNodeType typenode;
@@ -631,14 +615,12 @@ namespace StandardRoom
 
                                 idcheck = true;
                             }
-
                         }
 
                         if (reader.Name.Equals("Status"))
                         {
-
                             reader.Read();
-                      //   Console.WriteLine("  Status: " + reader.Value+" "+namecheck+" "+idcheck);
+                            //   Console.WriteLine("  Status: " + reader.Value+" "+namecheck+" "+idcheck);
 
                             if ((reader.Value.Equals("reserve")) && namecheck == true && idcheck == true)
                             {
@@ -650,7 +632,6 @@ namespace StandardRoom
 
                                 if (x == true)
                                 {
-
                                     Console.WriteLine("Enter Gender");
                                     Gender = Console.ReadLine();
                                     Console.Write(" Enter Totel Days To Stay:");
@@ -661,12 +642,12 @@ namespace StandardRoom
                                     FloorNo = floor;
                                     RoomNo = room;
                                     RoomType = type;
-                                    DateTime toda = DateTime.Now;
-                                    CheckIn = toda.ToString();
+                                    DateTime dateTime = DateTime.Now;
+                                    CheckIn = dateTime.ToString();
                                     //Console.WriteLine(toda);
                                     CheckOut = "";
                                     Status = "reserve";
-                                    DateTime newdate = toda.AddDays(Reserver_Days);
+                                    DateTime newdate = dateTime.AddDays(Reserver_Days);
                                     TimeRemainig = newdate.ToString();
                                     if (type.Equals("Standard"))
                                     {
@@ -674,7 +655,6 @@ namespace StandardRoom
                                     }
                                     else if (type.Equals("Moderate"))
                                     {
-
                                         Balance = Reserver_Days * 500;
                                     }
                                     else if (type.Equals("Superior"))
@@ -693,19 +673,17 @@ namespace StandardRoom
 
                                     reader.Close();
                                     return "Customer Added";
-
                                 }
 
                                 else
                                     return "Customer Added";
-
                             }
 
                             if (reader.Value.Equals("notreserve") && namecheck == true && idcheck == true)
                             {
                                 Console.WriteLine("Enter Gender");
                                 Gender = Console.ReadLine();
-                                Console.Write(" Enter Totel Days To Stay:");
+                                Console.Write(" Enter Total Days To Stay:");
 
                                 Reserver_Days = int.Parse(Console.ReadLine());
                                 // Console.Write(" Enter FloorNo:");
@@ -726,7 +704,6 @@ namespace StandardRoom
                                 }
                                 else if (type.Equals("Moderate"))
                                 {
-
                                     Balance = Reserver_Days * 500;
                                 }
                                 else if (type.Equals("Superior"))
@@ -753,7 +730,7 @@ namespace StandardRoom
                             idcheck = false;
                             namecheck = false;
                         }
-                       // reader.Close();
+                        // reader.Close();
                     }
                 }
                 reader.Close();
@@ -761,9 +738,6 @@ namespace StandardRoom
             }
             else
             {
-
-               
-
                 Boolean checkcustomer = true;
 
                 Console.Write(" Enter Name:");
@@ -771,7 +745,7 @@ namespace StandardRoom
 
                 Console.Write(" Enter ID:");
                 ID = Int32.Parse(Console.ReadLine());
-                Console.WriteLine(" Wait For 2s To Check IF Username and Password are not Taken");
+                Console.WriteLine(" Wait For 2s To Check IF UserName and Password are not Taken");
                 Console.WriteLine();
                 String r = DeleteReservedRoom(Name, ID);
                 DeleteCustomerRoom(r, Name, ID);
@@ -779,17 +753,17 @@ namespace StandardRoom
                 checkcustomer = check_customer();
 
 
-                while (checkcustomer) {
-                 Console.WriteLine("UserName Or PassWord Already taken Enter Again");
+                while (checkcustomer)
+                {
+                    Console.WriteLine("UserName Or PassWord Already taken Enter Again");
 
-                Console.Write(" Enter Name:");
-                Name = Console.ReadLine();
+                    Console.Write(" Enter Name:");
+                    Name = Console.ReadLine();
 
-                Console.Write(" Enter ID:");
-                ID = Int32.Parse(Console.ReadLine());
+                    Console.Write(" Enter ID:");
+                    ID = Int32.Parse(Console.ReadLine());
 
-                checkcustomer = check_customer();
-                    
+                    checkcustomer = check_customer();
                 }
 
                 DeleteCustomerRoom(type, Name, ID);
@@ -803,15 +777,15 @@ namespace StandardRoom
 
                 Reserver_Days = Int32.Parse(Console.ReadLine());
                 // Console.Write(" Enter FloorNo:");
-                
+
                 FloorNo = floor;
                 RoomNo = room;
                 RoomType = type;
                 DateTime toda = DateTime.Now;
-         
+
 
                 CheckIn = toda.ToString();
-                
+
                 //Console.WriteLine(toda);
                 CheckOut = "";
                 Status = "reserve";
@@ -823,7 +797,6 @@ namespace StandardRoom
                 }
                 else if (type.Equals("Moderate"))
                 {
-
                     Balance = Reserver_Days * 500;
                 }
                 else if (type.Equals("Superior"))
@@ -839,20 +812,16 @@ namespace StandardRoom
                     Balance = Reserver_Days * 5000;
                 }
 
-              
-                return "Customer Newly Added";
 
+                return "Customer Newly Added";
             }
 
 
             // return "Customer not Added";
-
-
         }
 
         public Boolean check_customer()
         {
-
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -878,23 +847,20 @@ namespace StandardRoom
                     if (reader.Name.Equals("IDCardNo"))
                     {
                         reader.Read();
-                        if (reader.Value.Equals(ID.ToString()) || namecheck==true)
+                        if (reader.Value.Equals(ID.ToString()) || namecheck == true)
                         {
                             reader.Close();
                             return true;
                         }
-
                     }
-
-                    
                 }
             }
             reader.Close();
-                            return false;
+            return false;
         }
+
         public int find_room(String r, int floor)
         {
-
             XmlTextReader reader = new XmlTextReader(r);
             XmlNodeType type;
             Boolean check = false;
@@ -913,7 +879,6 @@ namespace StandardRoom
                         {
                             check = true;
                         }
-
                     }
                     if (reader.Name == "Roomno" && check == true)
                     {
@@ -928,17 +893,11 @@ namespace StandardRoom
                         reader.Read();
                         if (reader.Value.Equals("notreserve"))
                         {
-
                             reader.Close();
                             return room;
                         }
-
-
                     }
-
                 }
-
-
             }
             return 0;
         }
@@ -947,13 +906,13 @@ namespace StandardRoom
         {
             if (File.Exists("Customer.xml") == false)
             {
-                  Console.WriteLine(TimeRemainig);
+                Console.WriteLine(TimeRemainig);
                 XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
                 xmlWriterSettings.Indent = true;
                 xmlWriterSettings.NewLineOnAttributes = true;
                 using (XmlWriter xmlWriter = XmlWriter.Create("Customer.xml", xmlWriterSettings))
                 {
-                    Double mon=CustomerTotalPaid(Name,ID);
+                    Double mon = CustomerTotalPaid(Name, ID);
                     Paid = mon + Paid;
                     Console.WriteLine(Paid);
                     xmlWriter.WriteStartDocument();
@@ -986,45 +945,38 @@ namespace StandardRoom
             }
             else
             {
-
                 XDocument xDocument = XDocument.Load("Customer.xml");
                 XElement root = xDocument.Element("Hotel");
                 IEnumerable<XElement> rows = root.Descendants("Customer");
                 XElement firstRow = rows.First();
                 firstRow.AddBeforeSelf(
-                           new XElement("Customer",
-                           new XElement("Name", Name),
-                           new XElement("Age", Age.ToString()),
-                           new XElement("Gender", Gender.ToString()),
-                           new XElement("IDCardNo", ID.ToString()),
-                           new XElement("BalanceRs", Balance.ToString()),
-                           new XElement("Paid", Paid.ToString()),
+                    new XElement("Customer",
+                        new XElement("Name", Name),
+                        new XElement("Age", Age.ToString()),
+                        new XElement("Gender", Gender.ToString()),
+                        new XElement("IDCardNo", ID.ToString()),
+                        new XElement("BalanceRs", Balance.ToString()),
+                        new XElement("Paid", Paid.ToString()),
+                        new XElement("DaysReserve", Reserver_Days.ToString()),
+                        new XElement("FloorNo", FloorNo.ToString()),
+                        new XElement("RoomType", RoomType.ToString()),
+                        new XElement("Roomno", RoomNo.ToString()),
+                        new XElement("CheckInTime", CheckIn.ToString()),
+                        new XElement("CheckOutTime", CheckOut.ToString()),
+                        new XElement("TimeRemaining", TimeRemainig.ToString()),
+                        new XElement("Status", Status.ToString())));
 
-                           new XElement("DaysReserve", Reserver_Days.ToString()),
-
-                           new XElement("FloorNo", FloorNo.ToString()),
-                           new XElement("RoomType", RoomType.ToString()),
-                           new XElement("Roomno", RoomNo.ToString()),
-                           new XElement("CheckInTime", CheckIn.ToString()),
-                           new XElement("CheckOutTime", CheckOut.ToString()),
-                           new XElement("TimeRemaining", TimeRemainig.ToString()),
-                           new XElement("Status", Status.ToString())));
-                
 
                 xDocument.Save("Customer.xml");
-            
+
                 return true;
             }
-
-          
-
-
         }
 
-        public Boolean Customer_Reserver(String r,int room)
+        public Boolean Customer_Reserver(String r, int room)
         {
             var doc = XDocument.Load(r);
-            var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("Roomno").Value==room.ToString());
+            var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("Roomno").Value == room.ToString());
             node.SetElementValue("Name", Name.ToString());
             node.SetElementValue("IDCardNo", ID.ToString());
             node.SetElementValue("Status", Status.ToString());
@@ -1032,14 +984,13 @@ namespace StandardRoom
 
             doc.Save(r);
             return true;
-            
         }
 
         public Boolean ReserveRoom(String room, int FloorNo)
         {
             String r = room + ".xml";
-         
-            int romreserve = find_room(r, FloorNo);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
+            int romreserve = find_room(r, FloorNo);
             if (romreserve > 0)
             {
                 String customer = AddCustomerInfo(FloorNo, romreserve, room);
@@ -1089,15 +1040,12 @@ namespace StandardRoom
                         if (customer.Equals("Customer Newly Added"))
                             msg = register_room(room);
                         else
-                        msg = Alreadyregister_room(room);
+                            msg = Alreadyregister_room(room);
 
-                        msg = Customer_Reserver(r,romreserve);
+                        msg = Customer_Reserver(r, romreserve);
 
                         return msg;
-
-
                     }
-                    
                 }
 
                 /* var doc = XDocument.Load(r);
@@ -1113,7 +1061,7 @@ namespace StandardRoom
 
         public Boolean Alreadyregister_room(String room)
         {
-            Double mon = CustomerTotalPaid(Name,ID);
+            Double mon = CustomerTotalPaid(Name, ID);
             Paid = Paid + mon;
             var doc = XDocument.Load("Customer.xml");
             var node = doc.Descendants("Customer").FirstOrDefault(cd => cd.Element("IDCardNo").Value == ID.ToString());
@@ -1134,13 +1082,12 @@ namespace StandardRoom
             node.SetElementValue("Status", Status.ToString());
 
 
-
-            doc.Save("Customer.xml"); 
-
+            doc.Save("Customer.xml");
 
 
             return true;
         }
+
         private void ReadHotelRooms(String name)
         {
             XmlTextReader reader = new XmlTextReader("Standard.xml");
@@ -1165,19 +1112,15 @@ namespace StandardRoom
                         reader.Read();
                         Console.WriteLine("  Status: " + reader.Value);
                     }
-
                 }
             }
 
 
-
             //       Console.ReadKey();
         }
-        
-        public Boolean Customer_roominfo(String name,int id)
-        {
-        
 
+        public Boolean Customer_roominfo(String name, int id)
+        {
             XmlTextReader reader = new XmlTextReader("Customer.xml");
             XmlNodeType typenode;
 
@@ -1196,7 +1139,7 @@ namespace StandardRoom
 
                         if (reader.Value.ToLower().Equals(name.ToString().ToLower()))
                         {
-  //                             Console.Write("Name " + reader.Value);
+                            //                             Console.Write("Name " + reader.Value);
 
                             namecheck = true;
                         }
@@ -1207,11 +1150,10 @@ namespace StandardRoom
                         reader.Read();
                         if (reader.Value.Equals(id.ToString()))
                         {
-    //                         Console.Write(" Id " + reader.Value);
+                            //                         Console.Write(" Id " + reader.Value);
 
                             idcheck = true;
                         }
-
                     }
 
                     if (reader.Name.Equals("BalanceRs"))
@@ -1219,7 +1161,7 @@ namespace StandardRoom
                         reader.Read();
                         if (namecheck == true && idcheck == true)
                         {
-                            Console.WriteLine(" Customer Due Money "+reader.Value.ToString());
+                            Console.WriteLine(" Customer Due Money " + reader.Value.ToString());
                         }
                     }
 
@@ -1237,7 +1179,7 @@ namespace StandardRoom
                         reader.Read();
                         if (namecheck == true && idcheck == true)
                         {
-                            Console.WriteLine(" Customer Dayes Reserve For Room " + reader.Value.ToString());
+                            Console.WriteLine(" Customer Days Reserve For Room " + reader.Value.ToString());
                         }
                     }
 
@@ -1264,7 +1206,7 @@ namespace StandardRoom
                         reader.Read();
                         if (namecheck == true && idcheck == true)
                         {
-                            Console.WriteLine(" Customer Roomno " + reader.Value.ToString());
+                            Console.WriteLine(" Customer RoomNo " + reader.Value.ToString());
                         }
                     }
 
@@ -1297,22 +1239,18 @@ namespace StandardRoom
 
                     if (reader.Name.Equals("Status"))
                     {
-
                         reader.Read();
-                       // Console.WriteLine("  Status: " + reader.Value + " " + namecheck + " " + idcheck);
+                        // Console.WriteLine("  Status: " + reader.Value + " " + namecheck + " " + idcheck);
 
                         if (namecheck == true && idcheck == true)
                         {
                             Console.WriteLine(" Customer Status " + reader.Value.ToString());
-
                         }
                     }
-
-
                 }
             }
 
-                return true;
+            return true;
         }
 
         public Boolean CustomerReport()
@@ -1331,44 +1269,40 @@ namespace StandardRoom
             Double Totalpaid = 0.0;
 
             XmlTextReader reader = new XmlTextReader("Customer.xml");
-            XmlNodeType typenode;
             Boolean check = false;
-          //  Boolean namecheck = false;
-           // Boolean idcheck = false;
+            //  Boolean namecheck = false;
+            // Boolean idcheck = false;
             while (reader.Read())
             {
-                typenode = reader.NodeType;
+                var typenode = reader.NodeType;
                 if (typenode == XmlNodeType.Element)
                 {
                     if (reader.Name.Equals("Name"))
                     {
-                        
-             //           namecheck = false;
+                        //           namecheck = false;
                         reader.Read();
                         //                         Console.Write("Name " + name.ToLower());
                         name = reader.Value.ToString();
 
 
-
-                     //   if (reader.Value.ToLower().Equals(name.ToString().ToLower()))
-                      //  {
+                        //   if (reader.Value.ToLower().Equals(name.ToString().ToLower()))
+                        //  {
                         //Console.Write("Name " + reader.Value);
 
-                          //  namecheck = true;
+                        //  namecheck = true;
                         //}
                     }
                     if (reader.Name.Equals("IDCardNo"))
                     {
-               //         idcheck = false;
+                        //         idcheck = false;
                         reader.Read();
-                    //    if (reader.Value.Equals(id.ToString()))
-                      //  {
-                      //  Console.Write(" Id " + reader.Value);
+                        //    if (reader.Value.Equals(id.ToString()))
+                        //  {
+                        //  Console.Write(" Id " + reader.Value);
                         id = reader.Value.ToString();
 
                         //    idcheck = true;
                         // }
-
                     }
 
                     if (reader.Name.Equals("BalanceRs"))
@@ -1444,18 +1378,17 @@ namespace StandardRoom
                         //{
                         DateTime thisDay = DateTime.Today;
                         // Display the date in the default (general) format.
-                        
+
                         //Console.WriteLine();
                         // Display the date in a variety of formats.
-                       // Console.WriteLine(thisDay.ToString("d"));
-                        
+                        // Console.WriteLine(thisDay.ToString("d"));
+
                         intime = reader.Value.ToString();
                         DateTime oDate = Convert.ToDateTime(intime);
                         if (oDate.ToString("d").Equals(thisDay.ToString("d")))
                         {
                             check = true;
                             Totalpaid = Totalpaid + int.Parse(paid);
-                          
                         }
                         //   Console.WriteLine(" Customer CheckInTime " + reader.Value.ToString());
                         //}
@@ -1486,51 +1419,45 @@ namespace StandardRoom
 
                     if (reader.Name.Equals("Status"))
                     {
-
                         reader.Read();
                         // Console.WriteLine("  Status: " + reader.Value + " " + namecheck + " " + idcheck);
 
-                     //   if (namecheck == true && idcheck == true)
-                       // {
-                       if (check==true)
+                        //   if (namecheck == true && idcheck == true)
+                        // {
+                        if (check == true)
                         {
-                          
                             Console.WriteLine(" **** *****           *****               ****                  *****");
 
-                            Console.WriteLine(" Customer Name "+name);
-                            Console.WriteLine(" Customer ID "+id);
-                            Console.WriteLine(" Customer Remaining Payment "+balance);
+                            Console.WriteLine(" Customer Name " + name);
+                            Console.WriteLine(" Customer ID " + id);
+                            Console.WriteLine(" Customer Remaining Payment " + balance);
                             Console.WriteLine(" Customer Total Paid " + paid);
 
                             Console.WriteLine(" Customer Reserve Days " + reserve);
                             Console.WriteLine(" Customer FloorNo " + FloorNo);
                             Console.WriteLine(" Customer RoomType " + romtype);
-                            Console.WriteLine(" Customer Roomno " + romno);
+                            Console.WriteLine(" Customer RoomNo " + romno);
                             Console.WriteLine(" Customer CheckIn Time " + intime);
                             Console.WriteLine(" Customer CheckOut Time " + outtime);
-                            Console.WriteLine(" Customer Remianing Time " + remtime);
+                            Console.WriteLine(" Customer Remaining Time " + remtime);
                             Console.WriteLine(" Customer Status " + reader.Value.ToString());
 
                             Console.WriteLine(" **** *****           *****               ****                  *****");
                             Console.WriteLine();
                             check = false;
                         }
-
                     }
-
-
                 }
             }
             Console.WriteLine("Total Todays Profit is " + Totalpaid);
 
             return true;
-
-      
         }
+
         public String StandardRoomReservation()
         {
             //Console.WriteLine("Which Room Do You Want ?") ;
-            Console.WriteLine(" Standand :  It has basic, standard amenities and furnishings. ");
+            Console.WriteLine(" Standard :  It has basic, standard amenities and furnishings. ");
             Console.WriteLine("Price is by default Rs.300 / 24 Hours .");
             Console.WriteLine("This Hotel contains total of 50 rooms of this type, 10 on each floor");
             Console.WriteLine("Total Standard Rooms Free are ");
@@ -1553,7 +1480,8 @@ namespace StandardRoom
 
         public String SuiteRoomReservation()
         {
-            Console.WriteLine("A Suite is usually two or more rooms clearly defined; a bedroom and a living or sitting room, with a door that closes between them.");
+            Console.WriteLine(
+                "A Suite is usually two or more rooms clearly defined; a bedroom and a living or sitting room, with a door that closes between them.");
             Console.WriteLine("Price is by default Rs. 5000 / 24 Hours and can be changed. ");
             Console.WriteLine("This Hotel contains total of 50 rooms of this type, 10 on each floor");
             Console.WriteLine("Total Suite Rooms Free are ");
@@ -1564,7 +1492,8 @@ namespace StandardRoom
 
         public String Junior_SuiteRoomReservation()
         {
-            Console.WriteLine("A Junior Suite is usually two or more rooms clearly defined; a bedroom and a living or sitting room, with a door that closes between them.");
+            Console.WriteLine(
+                "A Junior Suite is usually two or more rooms clearly defined; a bedroom and a living or sitting room, with a door that closes between them.");
             Console.WriteLine("Price is by default Rs. 2000 / 24 Hours and can be changed. ");
             Console.WriteLine("This Hotel contains total of 50 rooms of this type, 10 on each floor");
             Console.WriteLine("Total Junior Suite Rooms Free are ");
@@ -1575,7 +1504,8 @@ namespace StandardRoom
 
         public String SuperiorRoomReservation()
         {
-            Console.WriteLine("It's supposed to meansuperior to a standard room in both size and furnishings, but it often refers to just the view");
+            Console.WriteLine(
+                "It's supposed to meansuperior to a standard room in both size and furnishings, but it often refers to just the view");
             Console.WriteLine("Price is by default Rs. 1000 / 24 Hours and can be changed. ");
             Console.WriteLine("This Hotel contains total of 50 rooms of this type, 10 on each floor");
             Console.WriteLine("Total Superior Rooms Free are ");
@@ -1583,9 +1513,9 @@ namespace StandardRoom
 
             return "Room Reserved";
         }
+
         public String CheckIn_Customer()
         {
-
             return "";
         }
 
@@ -1606,9 +1536,7 @@ namespace StandardRoom
 
                         if (reader.Value.Equals(Name.ToString()))
                         {
-                               Console.Write("Name " + reader.Value);
-
-                           
+                            Console.Write("Name " + reader.Value);
                         }
                     }
                     if (reader.Name.Equals("IDCardNo"))
@@ -1617,17 +1545,10 @@ namespace StandardRoom
                         if (reader.Value.Equals(ID.ToString()))
                         {
                             Console.Write(" Id " + reader.Value);
-
                         }
-
                     }
-
-
                 }
-
             }
-
         }
     }
-
 }

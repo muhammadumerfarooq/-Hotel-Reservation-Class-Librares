@@ -9,7 +9,7 @@ namespace StandardRoom
     public interface Superior
     {
         String Superior_roominfo(String name, int id);
-         String Superior_ReservedCustomer(int id);
-      //  String Superior_CheckCustomer();
+        String Superior_ReservedCustomer(int id);
+        //  String Superior_CheckCustomer();
     }
 }

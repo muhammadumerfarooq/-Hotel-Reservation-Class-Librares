@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace StandardRoom
 {
-    public  interface Suite
+    public interface Suite
     {
-          String Suite_roominfo(String name, int id);
-
-         String Suite_ReservedCustomer(int id);
-       // String Suite_CheckCustomer();
+        String Suite_roominfo(String name, int id);
+        String Suite_ReservedCustomer(int id);
+        // String Suite_CheckCustomer();
     }
 }

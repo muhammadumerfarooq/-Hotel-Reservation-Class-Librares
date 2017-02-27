@@ -8,8 +8,8 @@ namespace StandardRoom
 {
     public interface Moderate
     {
-         String Moderate_roominfo(String name, int id);
-         String Moderate_ReservedCustomer(int id);
-       /// String Moderate_CheckCustomer();
+        String Moderate_roominfo(String name, int id);
+        String Moderate_ReservedCustomer(int id);
+        /// String Moderate_CheckCustomer();
     }
 }
