@@ -8,8 +8,8 @@ namespace StandardRoom
 {
     public interface Junior_Suite
     {
-        String Junior_Suite_roominfo(String room, int Floor);
-        String Junior_Suite_ReservedCustomer(int Floor);
-      //  String Junior_Suite_CheckCustomer();
+        String Junior_Suite_roominfo(String room, int floor);
+        String Junior_Suite_ReservedCustomer(int floor);
+        //  String Junior_Suite_CheckCustomer();
     }
 }

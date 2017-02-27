@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace StandardRoom
 {
-   public interface Standard
+    public interface Standard
     {
-         String StandardRoom_roominfo(String name, int id);
-         String StandardRoom_ReservedCustomer(int id);
-       // String StandardRoom_CheckCustomer();
-
-
+        String StandardRoom_roominfo(String name, int id);
+        String StandardRoom_ReservedCustomer(int id);
+        // String StandardRoom_CheckCustomer();
     }
 }
